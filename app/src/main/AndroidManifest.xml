@@ -35,6 +35,9 @@ package="com.example.myapplication">
     <activity
         android:name=".member_check"
         android:exported="false"/>
+    <activity
+        android:name=".Showmember"
+        android:exported="false"/>
     <meta-data android:name="android.max_aspect" android:value="2.1" />
 </application>
 

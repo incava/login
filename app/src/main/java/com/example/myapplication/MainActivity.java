@@ -17,9 +17,12 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
-    private TextView member;
-    private Button Main_team;
+    private TextView member,my_name;
+    private Button Main_team,go_member_check;
     private ImageButton Main_on, Main_setting;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,11 +32,15 @@ public class MainActivity extends AppCompatActivity {
         Main_team = findViewById(R.id.team_name);
         Main_on = findViewById(R.id.Main_on);
         member = findViewById(R.id.member);
+        my_name = findViewById(R.id.my_name);
+        go_member_check = findViewById(R.id.go_member_check);
         Intent intent = getIntent();
         String userID = intent.getStringExtra("userID");
-        String userPass = intent.getStringExtra("userPass");
+        //String userPass = intent.getStringExtra("userPass");
         String teamName = intent.getStringExtra("teamName");
         String team_member = intent.getStringExtra("team_member");
+        ArrayList team = intent.getStringArrayListExtra("team_array");
+        my_name.setText(userID+"님");
         Main_team.setText(teamName+ "팀");
         member.setText(team_member);
         Main_on.setOnClickListener(new View.OnClickListener() {
@@ -55,33 +62,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Main_team.setOnClickListener(new View.OnClickListener() {
+        go_member_check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String usersID = userID.toString();
-                //EditText에 입력되어있는것을 가져온다.
-                Response.Listener<String> responseListener = new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) { //json : 파싱해주는 역할
-                        try {
-                            JSONObject jsonObject = new JSONObject(response); //성공여부
-                            boolean success =  jsonObject.getBoolean("success");
-                            if (success) {
-                                Toast.makeText(getApplicationContext(), "맴버 등록에 성공하였습니다.", Toast.LENGTH_SHORT).show();
-                            }
-                            else {
-                                Toast.makeText(getApplicationContext(), "맴버 등록에 실패하였습니다.", Toast.LENGTH_SHORT).show();
-                                return;
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                };
-                Insertmember insertmember = new Insertmember(usersID,responseListener);
-                RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
-                queue.add(insertmember);
+                Intent intent = new Intent(MainActivity.this, Showmember.class);
+                intent.putExtra("userID", userID);
+                intent.putExtra("userID", teamName);
+                intent.putExtra("userID", team_member);
+                intent.putStringArrayListExtra("team_array",team);
+                startActivity(intent);
             }
         });
     }
 }
+
